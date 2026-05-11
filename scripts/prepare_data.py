@@ -6,7 +6,7 @@ processor = LlavaProcessor.from_pretrained("llava-hf/llava-interleave-qwen-0.5b-
 
 def preprocess_example(example):
     image = example["image"].convert("RGB")
-    prompt = f"Question: {example['question']} Answer:"
+    prompt = f"<image>\nQuestion: {example['question']} Answer:"
     full_text = prompt + " " + example["answer"]
 
     encoding = processor(
@@ -14,14 +14,20 @@ def preprocess_example(example):
         images=image,
         return_tensors="pt",
         padding="max_length",
-        max_length=128,
+        max_length=1024,
         truncation=True,
     )
 
     input_ids = encoding["input_ids"].squeeze()
     labels = input_ids.clone()
 
-    prompt_len = processor.tokenizer(prompt, return_tensors="pt")["input_ids"].shape[1]
+    prompt_encoding = processor(
+        text=prompt,
+        images=image,
+        return_tensors="pt",
+    )
+
+    prompt_len = prompt_encoding["input_ids"].shape[1]
     labels[:prompt_len] = -100
 
     return {

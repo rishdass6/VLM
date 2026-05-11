@@ -5,7 +5,7 @@ from transformers import get_linear_schedule_with_warmup
 from apply_lora import peft_model
 from load_model import processor
 
-EPOCHS = 3
+EPOCHS = 5
 LR = 2e-4
 BATCH_SIZE = 2
 OUTPUT_DIR = "checkpoints"

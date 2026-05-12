@@ -1,2 +1,8 @@
-VLM
-data
+checkpoints/
+data/
+*.safetensors
+*.bin
+__pycache__/
+*.pyc
+.env
+VLM/
